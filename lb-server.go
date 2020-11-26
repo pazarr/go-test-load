@@ -7,6 +7,7 @@ import (
     "time"
     "math/rand"
     "strconv"
+    "strings"
 )
 
 type Cookie struct {
@@ -171,15 +172,25 @@ func main() {
 
 
 func (sN *ServerNodeNumber) SidServer(w http.ResponseWriter, r *http.Request) {
-        aCookie, err := r.Cookie("sid")
-	aCookieSid := strconv.Itoa(rand.Int()) + "." + ServerID + "0" + sN.SNNumber
-        if err == nil {
-		fmt.Fprintf(w, "Found cookie: ", aCookie)
-	} else {
+    aCookie, err := r.Cookie("sid")
+	  aCookieSid := strconv.Itoa(rand.Int()) + "." + ServerID + "0" + sN.SNNumber
+    if err == nil {
+        fmt.Fprintf(os.Stdout, "Found cookie: " + aCookie.Value + "\n")
+        aCookieNodeNumber := strings.Split(aCookie.Value, ".")
+        if aCookieNodeNumber[1] != ServerID + "0" + sN.SNNumber {
+          expiration := time.Now().Add(24 * time.Hour)
+          cookie := http.Cookie{Name: "sid", Value: aCookieSid, Expires: expiration}
+          http.SetCookie(w, &cookie)
+          fmt.Fprintf(w, "Invalid Cookie found:" + aCookie.Value + "\nSet new cookie: " + aCookieSid + "\n")
+          fmt.Fprintf(os.Stdout, "Invalid Cookie found: " + aCookie.Value + "\n")
+        } else {
+          fmt.Fprintf(w, "Found valid cookie: " + aCookie.Value + "\n")
+        }
+	  } else {
 		expiration := time.Now().Add(24 * time.Hour)
 		cookie := http.Cookie{Name: "sid", Value: aCookieSid, Expires: expiration}
 		http.SetCookie(w, &cookie)
-		fmt.Fprintf(w, "Set cookie: ", aCookieSid)
+		fmt.Fprintf(w, "Set cookie: " + aCookieSid + "\n")
 		fmt.Fprintf(os.Stdout," New client: " + aCookieSid + "\n")
 	}
 }
