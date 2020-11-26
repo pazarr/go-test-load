@@ -42,7 +42,7 @@ var ServerID = os.Args[1]
 func main() {
 	finish := make(chan bool)
 	if len(os.Args) <= 1  {
-		fmt.Println("You specify the number of servers id and node number: " + os.Args[0] + " <integer> 8<integer(1-5)>80\n" )
+    fmt.Println("You need to specify the servers id and node number in this order: " + os.Args[0] + " <integer> 8<integer(1-5)>80\n" )
 		os.Exit(2)
 	}
 	argsPort, _ := strconv.Atoi(os.Args[2])
@@ -163,13 +163,9 @@ func main() {
                 }()
                 <-finish
 	default:
-                newServer := http.NewServeMux()
-                myHTTPHandler := &ServerNodeNumber{SNNumber: "1"}
-                newServer.HandleFunc("/", myHTTPHandler.SidServer)
-                go func() {
-                http.ListenAndServe(":8180", newServer)
-                }()
-                <-finish
+                fmt.Println("You need to specify the servers id and node number in this order: " + os.Args[0] + " <integer> 8<integer(1-5)>80\n" )
+                fmt.Println("Please note, node number cannot be higher than 5 or lower than 1. Server ID can be any integer\n" )
+                os.Exit(2)
   }
 }
 
