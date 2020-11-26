@@ -34,28 +34,36 @@ const (
 	SameSiteNoneMode
 )
 
+type ServerNodeNumber struct {
+    SNNumber string
+}
+var ServerID = os.Args[1]
+
 func main() {
 	finish := make(chan bool)
 	if len(os.Args) <= 1  {
-		fmt.Println("You specify the number of servers: " + os.Args[0] + " 8<integer(1-5)>80\n" )
+		fmt.Println("You specify the number of servers id and node number: " + os.Args[0] + " <integer> 8<integer(1-5)>80\n" )
 		os.Exit(2)
 	}
-	argsPort, _ := strconv.Atoi(os.Args[1])
+	argsPort, _ := strconv.Atoi(os.Args[2])
 	switch serverNum := argsPort; serverNum {
 	case 1:
                 newServer := http.NewServeMux()
-                newServer.HandleFunc("/", SidServer)
+		            myHTTPHandler := &ServerNodeNumber{SNNumber: "1"}
+                newServer.HandleFunc("/", myHTTPHandler.SidServer)
                 go func() {
                         http.ListenAndServe(":8180", newServer)
                 }()
-	        <-finish
+	              <-finish
 
 	case 2:
+                myHTTPHandler := &ServerNodeNumber{SNNumber: "1"}
                 newServer := http.NewServeMux()
-                newServer.HandleFunc("/", SidServer)
+                newServer.HandleFunc("/", myHTTPHandler.SidServer)
 
+                myHTTPHandler2 := &ServerNodeNumber{SNNumber: "2"}
                 newServer2 := http.NewServeMux()
-                newServer2.HandleFunc("/", SidServer)
+                newServer2.HandleFunc("/", myHTTPHandler2.SidServer)
 
                 go func() {
                         http.ListenAndServe(":8180", newServer)
@@ -65,15 +73,17 @@ func main() {
                 }()
                 <-finish
 	case 3:
+                myHTTPHandler := &ServerNodeNumber{SNNumber: "1"}
                 newServer := http.NewServeMux()
-                newServer.HandleFunc("/", SidServer)
+                newServer.HandleFunc("/", myHTTPHandler.SidServer)
 
+                myHTTPHandler2 := &ServerNodeNumber{SNNumber: "2"}
                 newServer2 := http.NewServeMux()
-                newServer2.HandleFunc("/", SidServer)
+                newServer2.HandleFunc("/", myHTTPHandler2.SidServer)
 
+                myHTTPHandler3 := &ServerNodeNumber{SNNumber: "3"}
                 newServer3 := http.NewServeMux()
-                newServer3.HandleFunc("/", SidServer)
-
+                newServer3.HandleFunc("/", myHTTPHandler3.SidServer)
 
                 go func() {
                         http.ListenAndServe(":8180", newServer)
@@ -84,20 +94,23 @@ func main() {
                 go func() {
                         http.ListenAndServe(":8380", newServer3)
                 }()
-
                 <-finish
-        case 4:
+  case 4:
+                myHTTPHandler := &ServerNodeNumber{SNNumber: "1"}
                 newServer := http.NewServeMux()
-                newServer.HandleFunc("/", SidServer)
+                newServer.HandleFunc("/", myHTTPHandler.SidServer)
 
+                myHTTPHandler2 := &ServerNodeNumber{SNNumber: "2"}
                 newServer2 := http.NewServeMux()
-                newServer2.HandleFunc("/", SidServer)
+                newServer2.HandleFunc("/", myHTTPHandler2.SidServer)
 
+                myHTTPHandler3 := &ServerNodeNumber{SNNumber: "3"}
                 newServer3 := http.NewServeMux()
-                newServer3.HandleFunc("/", SidServer)
+                newServer3.HandleFunc("/", myHTTPHandler3.SidServer)
 
+                myHTTPHandler4 := &ServerNodeNumber{SNNumber: "4"}
                 newServer4 := http.NewServeMux()
-                newServer4.HandleFunc("/", SidServer)
+                newServer4.HandleFunc("/", myHTTPHandler4.SidServer)
 
                 go func() {
                         http.ListenAndServe(":8180", newServer)
@@ -109,25 +122,29 @@ func main() {
                         http.ListenAndServe(":8380", newServer3)
                 }()
                 go func() {
-                        http.ListenAndServe(":8480", newServer3)
+                        http.ListenAndServe(":8480", newServer4)
                 }()
-
                 <-finish
-        case 5:
+  case 5:
+                myHTTPHandler := &ServerNodeNumber{SNNumber: "1"}
                 newServer := http.NewServeMux()
-                newServer.HandleFunc("/", SidServer)
+                newServer.HandleFunc("/", myHTTPHandler.SidServer)
 
+                myHTTPHandler2 := &ServerNodeNumber{SNNumber: "2"}
                 newServer2 := http.NewServeMux()
-                newServer2.HandleFunc("/", SidServer)
+                newServer2.HandleFunc("/", myHTTPHandler2.SidServer)
 
+                myHTTPHandler3 := &ServerNodeNumber{SNNumber: "3"}
                 newServer3 := http.NewServeMux()
-                newServer3.HandleFunc("/", SidServer)
+                newServer3.HandleFunc("/", myHTTPHandler3.SidServer)
 
+                myHTTPHandler4 := &ServerNodeNumber{SNNumber: "4"}
                 newServer4 := http.NewServeMux()
-                newServer4.HandleFunc("/", SidServer)
+                newServer4.HandleFunc("/", myHTTPHandler4.SidServer)
 
+                myHTTPHandler5 := &ServerNodeNumber{SNNumber: "5"}
                 newServer5 := http.NewServeMux()
-                newServer5.HandleFunc("/", SidServer)
+                newServer5.HandleFunc("/", myHTTPHandler5.SidServer)
 
                 go func() {
                         http.ListenAndServe(":8180", newServer)
@@ -139,28 +156,27 @@ func main() {
                         http.ListenAndServe(":8380", newServer3)
                 }()
                 go func() {
-                        http.ListenAndServe(":8480", newServer3)
+                        http.ListenAndServe(":8480", newServer4)
                 }()
-		go func() {
-                        http.ListenAndServe(":8580", newServer3)
+                go func() {
+                        http.ListenAndServe(":8580", newServer5)
                 }()
-
                 <-finish
 	default:
                 newServer := http.NewServeMux()
-                newServer.HandleFunc("/", SidServer)
-
+                myHTTPHandler := &ServerNodeNumber{SNNumber: "1"}
+                newServer.HandleFunc("/", myHTTPHandler.SidServer)
                 go func() {
-                        http.ListenAndServe(":8180", newServer)
+                http.ListenAndServe(":8180", newServer)
                 }()
                 <-finish
-	}
+  }
 }
 
 
-func SidServer(w http.ResponseWriter, r *http.Request) {
+func (sN *ServerNodeNumber) SidServer(w http.ResponseWriter, r *http.Request) {
         aCookie, err := r.Cookie("sid")
-	aCookieSid := strconv.Itoa(rand.Int())
+	aCookieSid := strconv.Itoa(rand.Int()) + "." + ServerID + "0" + sN.SNNumber
         if err == nil {
 		fmt.Fprintf(w, "Found cookie: ", aCookie)
 	} else {
@@ -168,6 +184,6 @@ func SidServer(w http.ResponseWriter, r *http.Request) {
 		cookie := http.Cookie{Name: "sid", Value: aCookieSid, Expires: expiration}
 		http.SetCookie(w, &cookie)
 		fmt.Fprintf(w, "Set cookie: ", aCookieSid)
-		fmt.Fprintf(os.Stdout,"New client: " + aCookieSid + "\n")
+		fmt.Fprintf(os.Stdout," New client: " + aCookieSid + "\n")
 	}
 }
